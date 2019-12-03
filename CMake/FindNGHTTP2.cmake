@@ -2,6 +2,13 @@ include(FindPackageHandleStandardArgs)
 
 find_path(NGHTTP2_INCLUDE_DIR "nghttp2/nghttp2.h")
 
+option(STATIC_NGHTTP2 "Use static nghttp2 library" OFF)
+if(STATIC_NGHTTP2)
+  set(_OLD_FIND_LIBRARY_SUFFIXES "${CMAKE_FIND_LIBRARY_SUFFIXES}")
+  mark_as_advanced(_OLD_FIND_LIBRARY_SUFFIXES)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.lib")
+endif()
+
 find_library(NGHTTP2_LIBRARY NAMES nghttp2)
 
 find_package_handle_standard_args(NGHTTP2
@@ -16,3 +23,7 @@ find_package_handle_standard_args(NGHTTP2
 
 set(NGHTTP2_INCLUDE_DIRS ${NGHTTP2_INCLUDE_DIR})
 set(NGHTTP2_LIBRARIES ${NGHTTP2_LIBRARY})
+
+if(STATIC_NGHTTP2)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES "${_OLD_FIND_LIBRARY_SUFFIXES}")
+endif()
